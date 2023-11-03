@@ -1,0 +1,8 @@
+run
+{
+delete noprompt force archivelog all completed before 'SYSDATE-7';
+crosscheck archivelog all;
+delete expired archivelog all;
+}
+exit
+

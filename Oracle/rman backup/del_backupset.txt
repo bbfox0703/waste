@@ -1,0 +1,6 @@
+run{
+crosscheck backupset;
+delete noprompt backupset;
+}
+exit
+
