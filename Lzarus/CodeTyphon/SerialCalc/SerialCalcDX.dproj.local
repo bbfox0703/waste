@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019/05/16 15:20:28.000.813,=C:\Users\ur07021\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/05/16 15:25:05.000.254,=C:\Users\ur07021\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2019/05/16 15:26:01.000.912,C:\Users\ur07021\Documents\Embarcadero\Studio\Projects\Unit2.pas=D:\Data\Source\Delphi\SerialCalc\md5.pas</Transaction>
+    <Transaction>2019/05/16 15:38:36.000.868,C:\Users\ur07021\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\Data\Source\Delphi\SerialCalc\main0.pas</Transaction>
+    <Transaction>2019/05/16 15:38:36.000.868,C:\Users\ur07021\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\Data\Source\Delphi\SerialCalc\main0.dfm</Transaction>
+    <Transaction>2019/05/16 15:38:50.000.519,C:\Users\ur07021\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\Data\Source\Delphi\SerialCalc\SerialCalcDX.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
