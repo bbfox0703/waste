@@ -1,0 +1,4 @@
+Enable / Disable AMD graphic driver update from Windows update.
+
+Windows update will install driver "Advanced Micro Devices, Inc. - Display - 31.0.12012.10" even you installed latest AMD software from its website.
+This registry files can enable/disable driver update
