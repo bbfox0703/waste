@@ -30,11 +30,8 @@ vi /etc/fail2ban/filter.d/mariadb.conf
 >before = common.conf
 >
 >[Definition]
->
 >_daemon = mariadbd
->
 >failregex = ^%(__prefix_line)s(?:\d+ |\d{6} \s?\d{1,2}:\d{2}:\d{2} )?\[\w+\] Access denied for user '[^']+'@'<HOST>' (to database '[^']*'|\(using password: (YES|NO)\))*\s*$
->
 >ignoreregex =
   
   
