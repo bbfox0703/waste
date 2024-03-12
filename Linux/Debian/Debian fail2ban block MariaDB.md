@@ -40,14 +40,15 @@ vi /etc/fail2ban/filter.d/mariadb.conf
   
 ## Add jail  
 sudo vi /etc/fail2ban/jail.local  
->[mariadb]
->enabled   = true
->port      = 3306
->filter    = mariadb
->logpath   = /var/log/mysql/error.log
->findtime  = 300
->maxretry  = 4
->bantime   = 300
+  
+>[mariadb]  
+>enabled   = true  
+>port      = 3306  
+>filter    = mariadb  
+>logpath   = /var/log/mysql/error.log  
+>findtime  = 300  
+>maxretry  = 4  
+>bantime   = 300  
 
     
 ## generate login error (i.e. password incorrect) log for MariaDB
