@@ -61,7 +61,7 @@ sudo ufw reload
 sudo ufw enable  
 
   
-### i.e.: other rules
+### i.e. other rules
 sudo ufw allow from any to any port 10050 proto tcp  
 sudo ufw allow from any to any port 161 proto udp  
 sudo ufw allow 10050/tcp  
