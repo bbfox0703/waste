@@ -20,11 +20,11 @@ sudo systemctl restart mariadb
 
     
 ## Install fail2ban
-apt install -y fail2ban  
+sudo apt install -y fail2ban  
 
     
 ## Add filter
-vi /etc/fail2ban/filter.d/mariadb.conf  
+sudo vi /etc/fail2ban/filter.d/mariadb.conf  
   
 >[INCLUDES]
 >before = common.conf  
@@ -55,19 +55,25 @@ sudo fail2ban-regex /var/log/mysql/error.log /etc/fail2ban/filter.d/mariadb.conf
 
     
 ## add ufw rule
-ufw allow ssh  
-ufw allow mysql  
-ufw reload  
-ufw enable  
+sudo ufw allow ssh  
+sudo ufw allow mysql  
+sudo ufw reload  
+sudo ufw enable  
 
-    
+  
+### i.e.: other rules
+sudo ufw allow from any to any port 10050 proto tcp  
+sudo ufw allow from any to any port 161 proto udp  
+sudo ufw allow 10050/tcp  
+
+  
 ## check ufw status
-ufw status verbose  
+sudo ufw status verbose  
 
     
 ## check fail2ban status
-systemctl restart fail2ban  
-systemctl status fail2ban  
+sudo systemctl restart fail2ban  
+sudo systemctl status fail2ban  
 
     
 ## Try to  login fail for MariaDB several times  
