@@ -4,7 +4,7 @@
 sudo apt install -y ufw rsyslog  
   
   
-## Restart ssh service
+## Restart ssh service for enable login fail logging  
 sudo systemctl restart sshd
   
   
@@ -15,7 +15,7 @@ sudo vi /etc/mysql/mariadb.conf.d/50-server.cnf
 >log_error = /var/log/mysql/error.log  
 
     
-### Resatrt service
+### Resatrt mariaDB service
 sudo systemctl restart mariadb
 
     
@@ -70,6 +70,8 @@ systemctl restart fail2ban
 systemctl status fail2ban  
 
     
+## Try to  login fail for MariaDB several times  
+  
 ## check fail2ban mariadb status
 fail2ban-client status mariadb
 
