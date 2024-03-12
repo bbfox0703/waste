@@ -3,8 +3,10 @@
 ## Install necessary packages  
 sudo apt install -y ufw rsyslog  
 
+
 ## Restart ssh service
 sudo systemctl restart sshd
+
 
 ## Enable MariaDB error log to seperate file
 
