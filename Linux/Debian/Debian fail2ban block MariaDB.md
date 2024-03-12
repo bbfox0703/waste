@@ -5,7 +5,7 @@ sudo apt install -y ufw rsyslog
   
   
 ## Restart ssh service for enable login fail logging  
-sudo systemctl restart sshd
+sudo systemctl restart sshd  
   
   
 ## Enable MariaDB error log to seperate file
@@ -16,15 +16,15 @@ sudo vi /etc/mysql/mariadb.conf.d/50-server.cnf
 
     
 ### Resatrt mariaDB service
-sudo systemctl restart mariadb
+sudo systemctl restart mariadb  
 
     
 ## Install fail2ban
-apt install -y fail2ban
+apt install -y fail2ban  
 
     
 ## Add filter
-vi /etc/fail2ban/filter.d/mariadb.conf
+vi /etc/fail2ban/filter.d/mariadb.conf  
   
 >[INCLUDES]
 >before = common.conf  
@@ -51,14 +51,14 @@ sudo vi /etc/fail2ban/jail.local
 ## generate login error (i.e. password incorrect) log for MariaDB
   
 ## test fail2ban RegEx
-sudo fail2ban-regex /var/log/mysql/error.log /etc/fail2ban/filter.d/mariadb.conf
+sudo fail2ban-regex /var/log/mysql/error.log /etc/fail2ban/filter.d/mariadb.conf  
 
     
 ## add ufw rule
-ufw allow ssh
-ufw allow mysql
-ufw reload
-ufw enable
+ufw allow ssh  
+ufw allow mysql  
+ufw reload  
+ufw enable  
 
     
 ## check ufw status
@@ -73,6 +73,6 @@ systemctl status fail2ban
 ## Try to  login fail for MariaDB several times  
   
 ## check fail2ban mariadb status
-fail2ban-client status mariadb
+fail2ban-client status mariadb  
 
     
