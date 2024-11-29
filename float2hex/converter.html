@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Conversion Tool</title>
+    <script>
+        function setLanguage(language) {
+            const texts = {
+                en: {
+                    title: "Advanced Conversion Tool",
+                    floatToHexTitle: "Float to Hex Converter",
+                    enterFloat: "Enter float number",
+                    convertToHex: "Convert to Hex",
+                    hexResult: "Hex: ",
+                    enterHex: "Enter hexadecimal",
+                    convertToFloat: "Convert to Float",
+                    floatResult: "Float: ",
+                    doubleToHexTitle: "Double to Hex Converter",
+                    enterDouble: "Enter double number",
+                    convertToDouble: "Convert to Double",
+                    doubleResult: "Double: ",
+                    validFloat: "Please enter a valid float number!",
+                    validHex: "Please enter a valid hexadecimal number!",
+                    validDouble: "Please enter a valid double number!"
+                },
+                zh: {
+                    title: "進階轉換工具",
+                    floatToHexTitle: "浮點數到十六進制轉換器",
+                    enterFloat: "輸入浮點數",
+                    convertToHex: "轉換為十六進制",
+                    hexResult: "十六進制: ",
+                    enterHex: "輸入十六進制",
+                    convertToFloat: "轉換為浮點數",
+                    floatResult: "浮點數: ",
+                    doubleToHexTitle: "雙精度到十六進制轉換器",
+                    enterDouble: "輸入雙精度浮點數",
+                    convertToDouble: "轉換為雙精度浮點數",
+                    doubleResult: "雙精度: ",
+                    validFloat: "請輸入有效的浮點數！",
+                    validHex: "請輸入有效的十六進制數字！",
+                    validDouble: "請輸入有效的雙精度浮點數！"
+                },
+                jp: {
+                    title: "高度な変換ツール",
+                    floatToHexTitle: "浮動小数点から16進数への変換",
+                    enterFloat: "浮動小数点数を入力",
+                    convertToHex: "16進数に変換",
+                    hexResult: "16進数: ",
+                    enterHex: "16進数を入力",
+                    convertToFloat: "浮動小数点数に変換",
+                    floatResult: "浮動小数点数: ",
+                    doubleToHexTitle: "倍精度から16進数への変換",
+                    enterDouble: "倍精度浮動小数点数を入力",
+                    convertToDouble: "倍精度に変換",
+                    doubleResult: "倍精度: ",
+                    validFloat: "有効な浮動小数点数を入力してください！",
+                    validHex: "有効な16進数を入力してください！",
+                    validDouble: "有効な倍精度浮動小数点数を入力してください！"
+                }
+            };
+
+            document.querySelector("h1").innerText = texts[language].title;
+            document.querySelector("#floatToHexTitle").innerText = texts[language].floatToHexTitle;
+            document.querySelector("#floatInput").placeholder = texts[language].enterFloat;
+            document.querySelector("#convertFloatButton").innerText = texts[language].convertToHex;
+            document.querySelector("#hexFloatInput").placeholder = texts[language].enterHex;
+            document.querySelector("#convertHexToFloatButton").innerText = texts[language].convertToFloat;
+            document.querySelector("#doubleToHexTitle").innerText = texts[language].doubleToHexTitle;
+            document.querySelector("#doubleInput").placeholder = texts[language].enterDouble;
+            document.querySelector("#convertDoubleButton").innerText = texts[language].convertToDouble;
+            document.querySelector("#hexDoubleInput").placeholder = texts[language].enterHex;
+            document.querySelector("#convertHexToDoubleButton").innerText = texts[language].convertToDouble;
+        }
+
+        function floatToHex() {
+            const floatInput = parseFloat(document.getElementById("floatInput").value);
+            if (isNaN(floatInput)) {
+                document.getElementById("floatHexResult").innerText = document.querySelector("#floatInput").placeholder;
+                return;
+            }
+            const view = new DataView(new ArrayBuffer(4));
+            view.setFloat32(0, floatInput);
+            const hexResult = view.getUint32(0).toString(16).toUpperCase();
+            document.getElementById("floatHexResult").innerText = "Hex: 0x" + hexResult;
+        }
+
+        function hexToFloat() {
+            const hexInput = document.getElementById("hexFloatInput").value;
+            const intValue = parseInt(hexInput, 16);
+            if (isNaN(intValue)) {
+                document.getElementById("hexFloatResult").innerText = document.querySelector("#hexFloatInput").placeholder;
+                return;
+            }
+            const view = new DataView(new ArrayBuffer(4));
+            view.setUint32(0, intValue);
+            const floatResult = view.getFloat32(0);
+            document.getElementById("hexFloatResult").innerText = "Float: " + floatResult;
+        }
+
+        function doubleToHex() {
+            const doubleInput = parseFloat(document.getElementById("doubleInput").value);
+            if (isNaN(doubleInput)) {
+                document.getElementById("doubleHexResult").innerText = document.querySelector("#doubleInput").placeholder;
+                return;
+            }
+            const view = new DataView(new ArrayBuffer(8));
+            view.setFloat64(0, doubleInput);
+            const hexResult = view.getBigUint64(0).toString(16).toUpperCase();
+            document.getElementById("doubleHexResult").innerText = "Hex: 0x" + hexResult;
+        }
+
+        function hexToDouble() {
+            const hexInput = document.getElementById("hexDoubleInput").value;
+            const intValue = BigInt("0x" + hexInput);
+            if (isNaN(Number(intValue))) {
+                document.getElementById("hexDoubleResult").innerText = document.querySelector("#hexDoubleInput").placeholder;
+                return;
+            }
+            const view = new DataView(new ArrayBuffer(8));
+            view.setBigUint64(0, intValue);
+            const doubleResult = view.getFloat64(0);
+            document.getElementById("hexDoubleResult").innerText = "Double: " + doubleResult;
+        }
+    </script>
+</head>
+<body style="text-align: center;">
+    <h1>Advanced Conversion Tool</h1>
+    <select onchange="setLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="zh">繁體中文</option>
+        <option value="jp">日本語</option>
+    </select>
+
+    <h2 id="floatToHexTitle">Float to Hex Converter</h2>
+    <input type="number" step="any" id="floatInput" placeholder="Enter float number">
+    <button id="convertFloatButton" onclick="floatToHex()">Convert to Hex</button>
+    <p id="floatHexResult">Hex: </p>
+
+    <input type="text" id="hexFloatInput" placeholder="Enter hexadecimal">
+    <button id="convertHexToFloatButton" onclick="hexToFloat()">Convert to Float</button>
+    <p id="hexFloatResult">Float: </p>
+
+    <h2 id="doubleToHexTitle">Double to Hex Converter</h2>
+    <input type="number" step="any" id="doubleInput" placeholder="Enter double number">
+    <button id="convertDoubleButton" onclick="doubleToHex()">Convert to Hex</button>
+    <p id="doubleHexResult">Hex: </p>
+
+    <input type="text" id="hexDoubleInput" placeholder="Enter hexadecimal">
+    <button id="convertHexToDoubleButton" onclick="hexToDouble()">Convert to Double</button>
+    <p id="hexDoubleResult">Double: </p>
+</body>
+</html>
