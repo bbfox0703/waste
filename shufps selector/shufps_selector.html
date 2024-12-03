@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHUFPS / VSHUFPS Imm8 Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .xmm-select {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>SHUFPS / VSHUFPS Imm8 Helper</h1>
+    <div class="xmm-select">
+        <label for="xmm1">First XMM Register:</label>
+        <select id="xmm1">
+            <option value="xmm0">xmm0</option>
+            <option value="xmm1">xmm1</option>
+            <option value="xmm2">xmm2</option>
+            <option value="xmm3">xmm3</option>
+            <option value="xmm4">xmm4</option>
+            <option value="xmm5">xmm5</option>
+            <option value="xmm6">xmm6</option>
+            <option value="xmm7">xmm7</option>
+            <option value="xmm8">xmm8</option>
+            <option value="xmm9">xmm9</option>
+            <option value="xmm10">xmm10</option>
+            <option value="xmm11">xmm11</option>
+            <option value="xmm12">xmm12</option>
+            <option value="xmm13">xmm13</option>
+            <option value="xmm14">xmm14</option>
+            <option value="xmm15">xmm15</option>
+        </select>
+    </div>
+    <div class="xmm-select">
+        <label for="xmm2">Second XMM Register:</label>
+        <select id="xmm2">
+            <option value="xmm0">xmm0</option>
+            <option value="xmm1">xmm1</option>
+            <option value="xmm2">xmm2</option>
+            <option value="xmm3">xmm3</option>
+            <option value="xmm4">xmm4</option>
+            <option value="xmm5">xmm5</option>
+            <option value="xmm6">xmm6</option>
+            <option value="xmm7">xmm7</option>
+            <option value="xmm8">xmm8</option>
+            <option value="xmm9">xmm9</option>
+            <option value="xmm10">xmm10</option>
+            <option value="xmm11">xmm11</option>
+            <option value="xmm12">xmm12</option>
+            <option value="xmm13">xmm13</option>
+            <option value="xmm14">xmm14</option>
+            <option value="xmm15">xmm15</option>
+        </select>
+    </div>
+    <h3>Select Floats to Shuffle</h3>
+    <p>Choose the 4 positions from the two registers (0-1 from the first xmm, 2-3 from the second xmm).</p>
+    <div id="float-positions">
+        <label>Result Position 0:</label>
+        <select class="position-select" id="pos0">
+            <option value="0">xmm 1st[0]</option>
+            <option value="1">xmm 1st[1]</option>
+            <option value="2">xmm 1st[2]</option>
+            <option value="3">xmm 1st[3]</option>
+        </select>
+        <br>
+        <label>Result Position 1:</label>
+        <select class="position-select" id="pos1">
+            <option value="0">xmm 1st[0]</option>
+            <option value="1">xmm 1st[1]</option>
+            <option value="2">xmm 1st[2]</option>
+            <option value="3">xmm 1st[3]</option>
+        </select>
+        <br>
+        <label>Result Position 2:</label>
+        <select class="position-select" id="pos2">
+            <option value="0">xmm 2nd[0]</option>
+            <option value="1">xmm 2nd[1]</option>
+            <option value="2">xmm 2nd[2]</option>
+            <option value="3">xmm 2nd[3]</option>
+        </select>
+        <br>
+        <label>Result Position 3:</label>
+        <select class="position-select" id="pos3">
+            <option value="0">xmm 2nd[0]</option>
+            <option value="1">xmm 2nd[1]</option>
+            <option value="2">xmm 2nd[2]</option>
+            <option value="3">xmm 2nd[3]</option>
+        </select>
+    </div>
+    <br>
+    <button onclick="generateInstruction()">Generate SHUFPS Instruction</button>
+    <h3>Result:</h3>
+    <p id="instruction"></p>
+</div>
+<script>
+    function generateInstruction() {
+        const xmm1 = document.getElementById('xmm1').value;
+        const xmm2 = document.getElementById('xmm2').value;
+        const pos0 = parseInt(document.getElementById('pos0').value);
+        const pos1 = parseInt(document.getElementById('pos1').value);
+        const pos2 = parseInt(document.getElementById('pos2').value);
+        const pos3 = parseInt(document.getElementById('pos3').value);
+
+        // Calculate imm8 value
+        const imm8 = (pos3 << 6) | (pos2 << 4) | (pos1 << 2) | pos0;
+
+        // Generate instruction
+        const instruction = `shufps ${xmm1}, ${xmm2}, 0x${imm8.toString(16)}`;
+        document.getElementById('instruction').textContent = instruction;
+    }
+</script>
+</body>
+</html>
