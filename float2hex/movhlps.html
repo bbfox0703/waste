@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movlhps and vmovlhps Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        p {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        ul {
+            margin: 20px auto;
+            width: 60%;
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        .diagram-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .diagram {
+            text-align: center;
+        }
+        .diagram-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+        .label {
+            font-size: 12px;
+        }
+        .arrow {
+            stroke: gray;
+            stroke-width: 1.5;
+            marker-end: url(#arrow);
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Movements: Instructions and Visualizations</h1>
+
+    <!-- 指令說明清單 -->
+    <p>The first things that you should know are how to copy data from memory to xmm registers and how to get the results back to your application from xmm registers after SIMD operation. The data movement instructions move scalar and packed data between memory and xmm registers.</p>
+    <ul>
+        <li><strong>movlhps</strong>: copy 2 low elements from xmm0 to the high position of xmm1</li>
+        <li><strong>vmovlhps</strong>: copy 2 low elements from xmm2 and combine them with xmm1 to produce xmm0</li>
+    </ul>
+
+    <!-- 圖形化展示 -->
+    <div class="diagram-container">
+        <!-- MOVLHPS Diagram -->
+        <div class="diagram">
+            <div class="diagram-title">movlhps xmm1, xmm0</div>
+            <svg width="500" height="300">
+                <!-- XMM0 Label -->
+                <text x="20" y="50" class="label" font-weight="bold">XMM0</text>
+                <!-- XMM1 Label -->
+                <text x="20" y="130" class="label" font-weight="bold">XMM1</text>
+                <!-- Resulting XMM1 Label -->
+                <text x="20" y="210" class="label" font-weight="bold">XMM1</text>
+
+                <!-- Top XMM0 Blocks -->
+                <rect x="70" y="30" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="120" y="30" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="170" y="30" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="220" y="30" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <text x="85" y="50" class="label">a3</text>
+                <text x="135" y="50" class="label">a2</text>
+                <text x="185" y="50" class="label">a1</text>
+                <text x="235" y="50" class="label">a0</text>
+
+                <!-- Middle XMM1 Blocks -->
+                <rect x="70" y="110" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="120" y="110" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="170" y="110" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="220" y="110" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <text x="85" y="130" class="label">b3</text>
+                <text x="135" y="130" class="label">b2</text>
+                <text x="185" y="130" class="label">b1</text>
+                <text x="235" y="130" class="label">b0</text>
+
+                <!-- Resulting XMM1 Blocks -->
+                <rect x="70" y="190" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="120" y="190" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="170" y="190" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="220" y="190" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <text x="85" y="210" class="label">a1</text>
+                <text x="135" y="210" class="label">a0</text>
+                <text x="185" y="210" class="label">b1</text>
+                <text x="235" y="210" class="label">b0</text>
+
+                <!-- Arrows -->
+                <line x1="195" y1="60" x2="85" y2="190" class="arrow" />
+                <line x1="245" y1="60" x2="135" y2="190" class="arrow" />
+                <!-- Arrowhead Definition -->
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+                        <path d="M0,0 L6,3 L0,6 Z" fill="gray"/>
+                    </marker>
+                </defs>				
+            </svg>
+        </div>
+
+        <!-- VMOVLHPS Diagram -->
+        <div class="diagram">
+            <div class="diagram-title">vmovlhps xmm0, xmm1, xmm2</div>
+            <svg width="500" height="300">
+                <!-- XMM1 Label -->
+                <text x="20" y="50" class="label" font-weight="bold">XMM1</text>
+                <!-- XMM2 Label -->
+                <text x="20" y="130" class="label" font-weight="bold">XMM2</text>
+                <!-- Resulting XMM0 Label -->
+                <text x="20" y="210" class="label" font-weight="bold">XMM0</text>
+
+                <!-- Top XMM1 Blocks -->
+                <rect x="70" y="30" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="120" y="30" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="170" y="30" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="220" y="30" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <text x="85" y="50" class="label">b3</text>
+                <text x="135" y="50" class="label">b2</text>
+                <text x="185" y="50" class="label">b1</text>
+                <text x="235" y="50" class="label">b0</text>
+
+                <!-- Middle XMM2 Blocks -->
+                <rect x="70" y="110" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="120" y="110" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="170" y="110" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="220" y="110" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <text x="85" y="130" class="label">a3</text>
+                <text x="135" y="130" class="label">a2</text>
+                <text x="185" y="130" class="label">a1</text>
+                <text x="235" y="130" class="label">a0</text>
+
+                <!-- Resulting XMM0 Blocks -->
+                <rect x="70" y="190" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="120" y="190" width="50" height="30" fill="#cce5ff" stroke="#000"/>
+                <rect x="170" y="190" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <rect x="220" y="190" width="50" height="30" fill="#f4f4f4" stroke="#000"/>
+                <text x="85" y="210" class="label">a1</text>
+                <text x="135" y="210" class="label">a0</text>
+                <text x="185" y="210" class="label">b1</text>
+                <text x="235" y="210" class="label">b0</text>
+
+                <!-- Arrows -->
+                <line x1="195" y1="140" x2="85" y2="190" class="arrow" />
+                <line x1="245" y1="140" x2="135" y2="190" class="arrow" />
+                <!-- Arrowhead Definition -->
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+                        <path d="M0,0 L6,3 L0,6 Z" fill="gray"/>
+                    </marker>
+                </defs>				
+            </svg>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arithmetic Operators Table</title>
+    <style>
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        td {
+            vertical-align: middle;
+        }
+        caption {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .note {
+            width: 90%;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Arithmetic Operators (SIMD and AVX2)</caption>
+        <thead>
+            <tr>
+                <th>Arithmetic</th>
+                <th>Scalar Operator</th>
+                <th>Packed Operator</th>
+                <th>AVX2 Operator</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>y = y + x</td>
+                <td>addss</td>
+                <td>addps</td>
+                <td>vaddss / vaddps</td>
+            </tr>
+            <tr>
+                <td>y = y - x</td>
+                <td>subss</td>
+                <td>subps</td>
+                <td>vsubss / vsubps</td>
+            </tr>
+            <tr>
+                <td>y = y × x</td>
+                <td>mulss</td>
+                <td>mulps</td>
+                <td>vmulss / vmulps</td>
+            </tr>
+            <tr>
+                <td>y = y ÷ x</td>
+                <td>divss</td>
+                <td>divps</td>
+                <td>vdivss / vdivps</td>
+            </tr>
+            <tr>
+                <td>y = 1 / x</td>
+                <td>rcpss</td>
+                <td>rcpps</td>
+                <td>vrcpss / vrcpps</td>
+            </tr>
+            <tr>
+                <td>y = √x</td>
+                <td>sqrtss</td>
+                <td>sqrtps</td>
+                <td>vsqrtss / vsqrtps</td>
+            </tr>
+            <tr>
+                <td>y = 1 / √x</td>
+                <td>rsqrtss</td>
+                <td>rsqrtps</td>
+                <td>vrsqrtss / vrsqrtps</td>
+            </tr>
+            <tr>
+                <td>y = max(y, x)</td>
+                <td>maxss</td>
+                <td>maxps</td>
+                <td>vmaxss / vmaxps</td>
+            </tr>
+            <tr>
+                <td>y = min(y, x)</td>
+                <td>minss</td>
+                <td>minps</td>
+                <td>vminss / vminps</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="note">
+        <p>
+            <strong>SIMD (Single Instruction, Multiple Data):</strong> These instructions allow operations to be performed on multiple data elements simultaneously, which is particularly useful for vectorized computations.
+        </p>
+        <p>
+            <strong>AVX2 (Advanced Vector Extensions 2):</strong> These are extended versions of SIMD instructions with VEX encoding, allowing for greater performance and flexibility, such as wider registers and improved parallelism. For example, `addss` is extended to `vaddss` in AVX2, supporting additional features like non-destructive three-operand forms.
+        </p>
+    </div>
+</body>
+</html>
