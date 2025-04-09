@@ -1,0 +1,24 @@
+$tests = @(
+  @{ text = "Hello world"; from = "en"; to = "zh" },
+  @{ text = "This is a test."; from = "en"; to = "zh" },
+  @{ text = "こんにちは"; from = "ja"; to = "zh" },
+  @{ text = "我們要開始戰爭了"; from = "zh"; to = "en" }
+)
+
+foreach ($item in $tests) {
+  Write-Host "`n▶ 原文: $($item.text)"
+  try {
+    $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/translate -Method Post `
+      -Body ($item | ConvertTo-Json -Compress) `
+      -ContentType 'application/json'
+
+    if ($response) {
+      Write-Host "✔ 翻譯: $response"
+    } else {
+      Write-Host "⚠ 翻譯結果為空"
+    }
+  }
+  catch {
+    Write-Host "❌ 發生錯誤：" $_.Exception.Message
+  }
+}
