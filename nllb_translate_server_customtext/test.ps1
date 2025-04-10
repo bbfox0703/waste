@@ -1,15 +1,15 @@
 $tests = @(
-  @{ text = "Hello, world!"; from = "en"; to = "zh" },
-  @{ text = "This is a test."; from = "en"; to = "zh" },
+  @{ text = "Hello, world!"; from = "en"; to = "zh-tw" },
+  @{ text = "This is a test."; from = "en"; to = "zh-tw" },
+  @{ text = "こんにちは"; from = "ja"; to = "zh-tw" },
   @{ text = "こんにちは"; from = "ja"; to = "en" },
-  @{ text = "こんにちは"; from = "ja"; to = "zh" },
   @{ text = "我們要開始戰爭了"; from = "zh"; to = "en" }
 )
 
 foreach ($item in $tests) {
   Write-Host "`n▶ 原文: $($item.text)"
   try {
-    $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/translate -Method Post `
+    $response = Invoke-RestMethod -Uri http://127.0.0.1:5001/translate-lite -Method Post `
       -Body ($item | ConvertTo-Json -Compress) `
       -ContentType 'application/json'
 
