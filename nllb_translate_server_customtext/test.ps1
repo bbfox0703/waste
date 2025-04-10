@@ -1,6 +1,7 @@
 $tests = @(
   @{ text = "Hello world"; from = "en"; to = "zh" },
   @{ text = "This is a test."; from = "en"; to = "zh" },
+  @{ text = "こんにちは"; from = "ja"; to = "en" },
   @{ text = "こんにちは"; from = "ja"; to = "zh" },
   @{ text = "我們要開始戰爭了"; from = "zh"; to = "en" }
 )
