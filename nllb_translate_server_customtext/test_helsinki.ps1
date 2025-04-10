@@ -1,9 +1,10 @@
 $tests = @(
   @{ text = "Hello, world!"; from = "en"; to = "zh" },
-  @{ text = "This is a test."; from = "en"; to = "zh" },
-  @{ text = "こんにちは"; from = "ja"; to = "en" },
+  @{ text = "This is a test."; from = "en"; to = "zh-tw" },
   @{ text = "こんにちは"; from = "ja"; to = "zh" },
-  @{ text = "我們要開始吃飯了"; from = "zh"; to = "en" }
+  @{ text = "こんにちは"; from = "ja"; to = "zh-tw" },
+  @{ text = "我們要開始吃飯了"; from = "zh-tw"; to = "en" }
+  @{ text = "我們要開始吃飯了"; from = "zh-tw"; to = "ja" }
 )
 
 foreach ($item in $tests) {
