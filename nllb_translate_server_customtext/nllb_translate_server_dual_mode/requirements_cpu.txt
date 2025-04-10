@@ -1,0 +1,9 @@
+torch>=2.0,<2.2
+torchvision>=0.15
+torchaudio>=2.0
+transformers>=4.37
+opencc-python-reimplemented
+flask
+flask-cors
+requests
+numpy<2.0

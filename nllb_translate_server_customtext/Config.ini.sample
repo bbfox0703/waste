@@ -9,7 +9,7 @@ FromLanguage=zh-cn
 [TextFrameworks]
 EnableUGUI=True
 EnableTextMeshPro=True
-EnableTextMesh=False
+EnableTextMesh=True
 EnableNGUI=True
 EnableIMGUI=True
 EnableFairyGUI=True
@@ -17,6 +17,11 @@ EnableFairyGUI=True
 [Behaviour]
 UseStaticTranslations=True
 GenerateStaticSubstitutionTranslations=False
+IgnoreWhitespaceInDialogue=False
+IgnoreWhitespaceInNGUI=False
+ForceSplitTextAfterCharacters=0
+OverrideFont=Microsoft JhengHei
+OverrideFontTextMeshPro=arialuni_sdf
 
 [Custom]
 Url=http://127.0.0.1:5000/translate

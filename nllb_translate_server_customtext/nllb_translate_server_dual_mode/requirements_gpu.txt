@@ -1,0 +1,6 @@
+transformers>=4.37
+opencc-python-reimplemented
+flask
+flask-cors
+requests
+numpy<2.0
