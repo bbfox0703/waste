@@ -3,6 +3,8 @@ $tests = @(
   @{ text = "This is a test."; from = "en"; to = "zh-tw" },
   @{ text = "いただきます"; from = "ja"; to = "zh-cn" },
   @{ text = "いただきます"; from = "ja"; to = "zh" },
+  @{ text = "いただきます"; from = "ja"; to = "en" },
+  @{ text = "Good evening"; from = "en"; to = "ja" },
   @{ text = "我們要開始吃飯了"; from = "zh-tw"; to = "en" }
   @{ text = "我們要開始吃飯了"; from = "zh-tw"; to = "zh-cn" }
   @{ text = "我們要開始吃飯了"; from = "zh-tw"; to = "ja" }
