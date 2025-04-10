@@ -1,5 +1,5 @@
 $tests = @(
-  @{ text = "Hello world"; from = "en"; to = "zh" },
+  @{ text = "Hello, world!"; from = "en"; to = "zh" },
   @{ text = "This is a test."; from = "en"; to = "zh" },
   @{ text = "こんにちは"; from = "ja"; to = "en" },
   @{ text = "こんにちは"; from = "ja"; to = "zh" },

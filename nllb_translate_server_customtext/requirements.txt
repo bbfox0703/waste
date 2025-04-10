@@ -1,6 +1,5 @@
-transformers>=4.37
+torch>=2.0.0
+transformers==4.33.3
 opencc-python-reimplemented
 flask
 flask-cors
-requests
-numpy<2.0
