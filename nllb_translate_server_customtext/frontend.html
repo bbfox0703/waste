@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>NLLB 翻譯前端</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f2f2f2; }
+    textarea, select, button {
+      display: block;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 100%;
+    }
+    #result { white-space: pre-wrap; background: #fff; padding: 1rem; border: 1px solid #ccc; min-height: 100px; }
+  </style>
+</head>
+<body>
+  <h1>NLLB 翻譯器</h1>
+  <h3>注意：使用CPU模式會慢不少!!</h3>
+
+  <label for="from">來源語言：</label>
+  <select id="from">
+    <option value="ja">日文</option>
+    <option value="en" selected>英文</option>
+    <option value="zh">中文</option>
+    <option value="zh-cn">簡體中文</option>
+    <option value="zh-tw">繁體中文</option>
+  </select>
+
+  <label for="to">目標語言：</label>
+  <select id="to">
+    <option value="ja">日文</option>
+    <option value="en">英文</option>
+    <option value="zh">中文</option>
+    <option value="zh-cn">簡體中文</option>
+    <option value="zh-tw" selected>繁體中文</option>
+  </select>
+
+  <label for="input">翻譯內容：</label>
+  <textarea id="input" rows="6" placeholder="請輸入要翻譯的文字..."></textarea>
+
+  <button onclick="translateText()">翻譯</button>
+
+  <h2>翻譯結果：</h2>
+  <div id="result"></div>
+
+  <script>
+	async function translateText() {
+	  const text = document.getElementById("input").value;
+	  const from = document.getElementById("from").value;
+	  const to = document.getElementById("to").value;
+	  const resultDiv = document.getElementById("result");
+
+	  resultDiv.textContent = "翻譯中...";
+
+	  try {
+		const response = await fetch("http://127.0.0.1:5000/translate", {
+		  method: "POST",
+		  headers: {
+			"Content-Type": "application/json"
+		  },
+		  body: JSON.stringify({
+			text: text,    
+			from: from,
+			to: to
+		  })
+		});
+
+		const resultText = await response.text();  // Flask 是回傳純文字
+		resultDiv.textContent = resultText;
+	  } catch (err) {
+		resultDiv.textContent = "錯誤：" + err;
+	  }
+	}
+
+  </script>
+</body>
+</html>

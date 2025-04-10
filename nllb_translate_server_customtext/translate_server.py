@@ -5,11 +5,12 @@ import opencc
 import re
 import urllib.parse
 import warnings
+from flask_cors import CORS  # ✅ CORS支援
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 app = Flask(__name__)
-
+CORS(app)
 # ✅ 使用 NllbTokenizer（不是 fast）
 model_name = "facebook/nllb-200-1.3B"
 tokenizer = NllbTokenizer.from_pretrained(model_name)
