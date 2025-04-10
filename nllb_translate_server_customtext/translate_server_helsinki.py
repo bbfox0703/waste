@@ -114,7 +114,16 @@ def translate():
             inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
             out = model_en_jap.generate(**inputs)
             final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
-
+        # === ja -> en ===
+        elif from_lang == "ja" and to_lang == "en":
+            inputs = tokenizer_ja_en(text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_ja_en.generate(**inputs)
+            final_text = tokenizer_ja_en.batch_decode(out, skip_special_tokens=True)[0]
+        # === en -> ja ===
+        elif from_lang == "en" and to_lang == "ja":
+            inputs = tokenizer_en_jap(text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_en_jap.generate(**inputs)
+            final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
 
         else:
             return Response("[error] 暫不支援此語言對", content_type="text/plain; charset=utf-8")
