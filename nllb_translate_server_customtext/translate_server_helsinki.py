@@ -13,30 +13,31 @@ app = Flask(__name__)
 CORS(app)
 
 # ===
-# 轉譯模型
+# 模型載入
 # ===
-model_name_ja_en = "Helsinki-NLP/opus-mt-ja-en"
-tokenizer_ja_en = MarianTokenizer.from_pretrained(model_name_ja_en)
-model_ja_en = MarianMTModel.from_pretrained(model_name_ja_en)
+model_ja_en = MarianMTModel.from_pretrained("Helsinki-NLP/opus-mt-ja-en")
+tokenizer_ja_en = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ja-en")
 
-model_name_en_zh = "Helsinki-NLP/opus-mt-en-zh"
-tokenizer_en_zh = MarianTokenizer.from_pretrained(model_name_en_zh)
-model_en_zh = MarianMTModel.from_pretrained(model_name_en_zh)
+model_en_zh = MarianMTModel.from_pretrained("Helsinki-NLP/opus-mt-en-zh")
+tokenizer_en_zh = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-zh")
 
-model_name_zh_en = "Helsinki-NLP/opus-mt-zh-en"
-tokenizer_zh_en = MarianTokenizer.from_pretrained(model_name_zh_en)
-model_zh_en = MarianMTModel.from_pretrained(model_name_zh_en)
+model_zh_en = MarianMTModel.from_pretrained("Helsinki-NLP/opus-mt-zh-en")
+tokenizer_zh_en = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-zh-en")
+
+model_en_jap = MarianMTModel.from_pretrained("Helsinki-NLP/opus-mt-en-jap")
+tokenizer_en_jap = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-jap")
 
 # ===
-# 設備
+# 設備切換
 # ===
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_ja_en.to(device)
 model_en_zh.to(device)
 model_zh_en.to(device)
+model_en_jap.to(device)
 
 # ===
-# OpenCC
+# OpenCC 轉換
 # ===
 opencc_s2t = opencc.OpenCC('s2t')
 opencc_t2s = opencc.OpenCC('t2s')
@@ -53,74 +54,82 @@ def translate():
         from_lang = data.get("from", "en")
         to_lang = data.get("to", "zh")
 
-    print(f"📥 翻譯請求: {text}, from={from_lang}, to={to_lang}")
+    # 預設 zh 為 zh-tw
+    if from_lang == "zh":
+        from_lang = "zh-tw"
+    if to_lang == "zh":
+        to_lang = "zh-tw"
+
+    print(f"\U0001f4e5 翻譯請求: {text}, from={from_lang}, to={to_lang}")
     text = urllib.parse.unquote(text)
     text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text)
 
     try:
         # === ja -> zh / zh-tw ===
         if from_lang == "ja" and to_lang.startswith("zh"):
-            # ja -> en
-            tokenizer = tokenizer_ja_en
-            model = model_ja_en
-            inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True).to(device)
-            translated = model.generate(**inputs)
-            mid_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
-            print(f"🔁 中間 en: {mid_text}")
+            inputs = tokenizer_ja_en(text, return_tensors="pt", padding=True, truncation=True).to(device)
+            mid = model_ja_en.generate(**inputs)
+            mid_text = tokenizer_ja_en.batch_decode(mid, skip_special_tokens=True)[0]
+            print(f"✉️ 中間 en: {mid_text}")
 
-            # en -> zh
-            tokenizer = tokenizer_en_zh
-            model = model_en_zh
-            inputs = tokenizer(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
-            translated = model.generate(**inputs)
-            final_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+            inputs = tokenizer_en_zh(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_en_zh.generate(**inputs)
+            final_text = tokenizer_en_zh.batch_decode(out, skip_special_tokens=True)[0]
 
-        # === zh/zh-cn/zh-tw -> en ===
-        elif from_lang.startswith("zh") and to_lang == "en":
+        # === zh-tw / zh-cn -> en ===
+        elif from_lang in ["zh-tw", "zh-cn"] and to_lang == "en":
             zh_text = text if from_lang == "zh-cn" else opencc_t2s.convert(text)
-            tokenizer = tokenizer_zh_en
-            model = model_zh_en
-            inputs = tokenizer(zh_text, return_tensors="pt", padding=True, truncation=True).to(device)
-            translated = model.generate(**inputs)
-            final_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+            inputs = tokenizer_zh_en(zh_text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_zh_en.generate(**inputs)
+            final_text = tokenizer_zh_en.batch_decode(out, skip_special_tokens=True)[0]
 
         # === en -> zh / zh-tw ===
         elif from_lang == "en" and to_lang.startswith("zh"):
-            tokenizer = tokenizer_en_zh
-            model = model_en_zh
-            inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True).to(device)
-            translated = model.generate(**inputs)
-            final_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+            inputs = tokenizer_en_zh(text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_en_zh.generate(**inputs)
+            final_text = tokenizer_en_zh.batch_decode(out, skip_special_tokens=True)[0]
 
-        # === zh -> ja (經 en 中介) ===
-        elif from_lang.startswith("zh") and to_lang == "ja":
-            zh_text = text if from_lang == "zh-cn" else opencc_t2s.convert(text)
-            tokenizer = tokenizer_zh_en
-            model = model_zh_en
-            inputs = tokenizer(zh_text, return_tensors="pt", padding=True, truncation=True).to(device)
-            translated = model.generate(**inputs)
-            mid_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
-            print(f"🔁 中間 en: {mid_text}")
+        # === zh-tw -> zh-cn ===
+        elif from_lang == "zh-tw" and to_lang == "zh-cn":
+            final_text = opencc_t2s.convert(text)
 
-            tokenizer = tokenizer_en_zh
-            model = model_en_zh
-            inputs = tokenizer(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
-            translated = model.generate(**inputs)
-            final_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+        # === zh / zh-tw -> ja (via en) ===
+        elif from_lang in ["zh", "zh-tw"] and to_lang == "ja":
+            zh_text = opencc_t2s.convert(text)
+            inputs = tokenizer_zh_en(zh_text, return_tensors="pt", padding=True, truncation=True).to(device)
+            mid = model_zh_en.generate(**inputs)
+            mid_text = tokenizer_zh_en.batch_decode(mid, skip_special_tokens=True)[0]
+            print(f"✉️ 中間 en: {mid_text}")
+
+            inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_en_jap.generate(**inputs)
+            final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
+        # === zh-cn -> ja (via en) ===
+        elif from_lang == "zh-cn" and to_lang == "ja":
+            inputs = tokenizer_zh_en(text, return_tensors="pt", padding=True, truncation=True).to(device)
+            mid = model_zh_en.generate(**inputs)
+            mid_text = tokenizer_zh_en.batch_decode(mid, skip_special_tokens=True)[0]
+            print(f"✉️ 中間 en: {mid_text}")
+
+            inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
+            out = model_en_jap.generate(**inputs)
+            final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
+
 
         else:
             return Response("[error] 暫不支援此語言對", content_type="text/plain; charset=utf-8")
 
+        # zh-tw 目標語言 → 使用繁體
         if to_lang == "zh-tw":
             final_text = opencc_s2t.convert(final_text)
 
         final_text = final_text.replace("<eol>", "\n")
-        print(f"✅ 翻譯結果: {final_text}")
+        print(f"\u2705 翻譯結果: {final_text}")
         return Response(final_text, content_type="text/plain; charset=utf-8")
 
     except Exception as e:
         return Response(f"[error] {e}", content_type="text/plain; charset=utf-8")
 
 if __name__ == "__main__":
-    print("✅ Helsinki 輕量翻譯伺服器啟動成功")
+    print("\u2705 Helsinki 翻譯伺服器已啟動 (port 5001)")
     app.run(host="0.0.0.0", port=5001)
