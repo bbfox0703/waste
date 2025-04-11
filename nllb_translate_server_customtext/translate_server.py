@@ -12,8 +12,9 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 app = Flask(__name__)
 CORS(app)
 # ✅ 使用 NllbTokenizer（不是 fast）
-# model_name = "facebook/nllb-200-600m"
-model_name = "facebook/nllb-200-1.3B"
+# model_name = "facebook/nllb-200-distilled-600M"
+# model_name = "facebook/nllb-200-1.3B"
+model_name = "facebook/nllb-200-distilled-1.3B"
 # model_name = "facebook/nllb-200-3.3B"
 tokenizer = NllbTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
