@@ -61,8 +61,12 @@ def translate():
         to_lang = "zh-tw"
 
     print(f"\U0001f4e5 翻譯請求: {text}, from={from_lang}, to={to_lang}")
+    
+    text_s2t = text
     text = urllib.parse.unquote(text)
-    text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text)
+    ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text)
+    text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A|\s)', '<eol>', text) ## 連空白也處理
+
 
     try:
         # === ja -> zh / zh-tw ===
@@ -90,9 +94,13 @@ def translate():
             final_text = tokenizer_en_zh.batch_decode(out, skip_special_tokens=True)[0]
 
         # === zh-tw -> zh-cn ===
-        elif from_lang == "zh-tw" and to_lang == "zh-cn":
+        elif from_lang in ["zh-tw", "zh"] and to_lang == "zh-cn":
             final_text = opencc_t2s.convert(text)
-
+            
+        # === zh-cn -> zh-tw ===
+        elif from_lang == "zh-cn" and to_lang in ["zh-tw", "zh"]:
+            final_text = opencc_s2t.convert(text)
+            
         # === zh / zh-tw -> ja (via en) ===
         elif from_lang in ["zh", "zh-tw"] and to_lang == "ja":
             zh_text = opencc_t2s.convert(text)
@@ -104,6 +112,7 @@ def translate():
             inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
             out = model_en_jap.generate(**inputs)
             final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
+            
         # === zh-cn -> ja (via en) ===
         elif from_lang == "zh-cn" and to_lang == "ja":
             inputs = tokenizer_zh_en(text, return_tensors="pt", padding=True, truncation=True).to(device)
@@ -114,11 +123,13 @@ def translate():
             inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
             out = model_en_jap.generate(**inputs)
             final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
+            
         # === ja -> en ===
         elif from_lang == "ja" and to_lang == "en":
             inputs = tokenizer_ja_en(text, return_tensors="pt", padding=True, truncation=True).to(device)
             out = model_ja_en.generate(**inputs)
             final_text = tokenizer_ja_en.batch_decode(out, skip_special_tokens=True)[0]
+            
         # === en -> ja ===
         elif from_lang == "en" and to_lang == "ja":
             inputs = tokenizer_en_jap(text, return_tensors="pt", padding=True, truncation=True).to(device)
