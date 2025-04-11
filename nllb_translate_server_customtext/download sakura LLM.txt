@@ -1,0 +1,5 @@
+git lfs install
+git clone https://huggingface.co/SakuraLLM/Sakura-GalTransl-7B-v3
+
+
+### request huggingface.co account
