@@ -64,8 +64,8 @@ def translate():
     
     text_s2t = text
     text = urllib.parse.unquote(text)
-    ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text)
-    text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A|\s)', '<eol>', text) ## 連空白也處理
+    text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text) ## 空白不視作換行
+    ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A|\s)', '<eol>', text) ## 連空白視作換行
 
 
     try:
