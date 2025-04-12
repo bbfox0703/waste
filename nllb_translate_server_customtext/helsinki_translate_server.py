@@ -42,7 +42,7 @@ model_en_jap.to(device)
 # OpenCC 轉換
 # ===
 opencc_s2t = opencc.OpenCC('s2tw')
-opencc_t2s = opencc.OpenCC('t2s')
+opencc_t2s = opencc.OpenCC('tw2s')
 
 ##http://127.0.0.1:5001/translate-lite?from=ja&to=zh&wrap=false
 
