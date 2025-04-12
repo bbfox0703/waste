@@ -23,7 +23,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 
 # OpenCC：簡體 → 繁體
-opencc_converter = opencc.OpenCC('s2t')
+opencc_converter = opencc.OpenCC('s2tw')
 
 # 語言碼映射
 def lang_code(lang):
