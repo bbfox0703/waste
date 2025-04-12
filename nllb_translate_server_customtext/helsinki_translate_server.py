@@ -46,28 +46,33 @@ opencc_t2s = opencc.OpenCC('t2s')
 
 ##http://127.0.0.1:5001/translate-lite?from=ja&to=zh&wrap=false
 
-def smart_linebreak(text, max_chars=35):
+def smart_linebreak(text, max_chars=35, word_split_threshold=12):
     import unicodedata
-    lines = []
-    buffer = ""
-    count = 0
 
-    for c in text:
-        if unicodedata.east_asian_width(c) in ('F', 'W', 'A'):
-            count += 1
+    def count_length(s):
+        count = 0
+        for c in s:
+            if unicodedata.east_asian_width(c) in ('F', 'W', 'A'):
+                count += 1
+            else:
+                count += 0.5
+        return count
+
+    # 根據 <eol> 切開段落
+    lines = text.split("<eol>")
+    result_lines = []
+
+    for line in lines:
+        line = line.strip()
+        total_length = count_length(line)
+
+        if total_length <= word_split_threshold:
+            result_lines.append(line)
         else:
-            count += 0.5
+            # 空白為單位換行
+            result_lines.extend(line.split())
 
-        buffer += c
-        if count >= max_chars:
-            lines.append(buffer)
-            buffer = ""
-            count = 0
-
-    if buffer:
-        lines.append(buffer)
-
-    return "\n".join(lines)
+    return "\n".join(result_lines)
 
 @app.route("/ping")
 def ping():
@@ -98,7 +103,7 @@ def translate():
     
     text_s2t = text
     text = urllib.parse.unquote(text)
-    ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text) ## 空白不視作換行
+    text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text) ## 空白不視作換行
     ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A|\s)', '<eol>', text) ## 連空白視作換行(i.e. Elin)
 
 
@@ -179,7 +184,7 @@ def translate():
 
         final_text = final_text.replace("<eol>", "\n")
         if wrap:
-            final_text = smart_linebreak(final_text, max_chars=35)
+            final_text = smart_linebreak(final_text, max_chars=100)
         print(f"\u2705 翻譯結果: {final_text}")
         return Response(final_text, content_type="text/plain; charset=utf-8")
 
