@@ -41,12 +41,53 @@ model_en_jap.to(device)
 # ===
 # OpenCC 轉換
 # ===
-opencc_s2t = opencc.OpenCC('s2tw')
+opencc_s2t = opencc.OpenCC('s2twp')
 opencc_t2s = opencc.OpenCC('tw2s')
+
+
+custom_zhcn_to_zh_tw = {
+    "鼠標": "游標",
+    "軟件": "軟體",
+    "硬件": "硬體",
+    "文件": "檔案",
+    "設置": "設定",
+    "粘貼": "貼上",
+    "游戏": "遊戲",
+    "主頁": "首頁",
+    "圖像": "影像",
+    "圖標": "圖示",
+    "字体": "字型",
+    "联网": "連線",
+    "登陸": "登入",
+    "注册": "註冊",
+    "賬號": "帳號",
+    "郵箱": "電子郵件",
+    "數據": "資料",
+    "屏幕": "螢幕",
+    "攝影頭": "攝影機",
+    "窗口": "視窗",
+    "應用程序": "應用程式",
+    "控制面板": "控制台",
+    "快捷鍵": "快速鍵",
+    "界面": "介面",
+    "关机": "關機",
+    "保存": "儲存",
+    "加載": "載入",
+    "打印機": "印表機",
+    "缺省": "預設",
+    "手游": "手遊",
+    "硬盤": "硬碟",
+    "內存": "記憶體"
+}
+
+def patch_custom_terms(text: str) -> str:
+    for k, v in custom_zhcn_to_zh_tw.items():
+        text = text.replace(k, v)
+    return text
 
 ##http://127.0.0.1:5001/translate-lite?from=ja&to=zh&wrap=false
 
-def smart_linebreak(text, max_chars=35, word_split_threshold=12):
+def smart_linebreak(text, max_chars=35, word_split_threshold=24):
     import unicodedata
 
     def count_length(s):
@@ -181,6 +222,7 @@ def translate():
         # zh-tw 目標語言 → 使用繁體
         if to_lang == "zh-tw":
             final_text = opencc_s2t.convert(final_text)
+            final_text = patch_custom_terms(final_text) 
 
         final_text = final_text.replace("<eol>", "\n")
         if wrap:
