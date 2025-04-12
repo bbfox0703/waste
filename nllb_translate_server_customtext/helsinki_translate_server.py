@@ -6,6 +6,7 @@ import re
 import urllib.parse
 import warnings
 from flask_cors import CORS
+import unicodedata
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -36,23 +37,54 @@ model_en_zh.to(device)
 model_zh_en.to(device)
 model_en_jap.to(device)
 
+
 # ===
 # OpenCC 轉換
 # ===
 opencc_s2t = opencc.OpenCC('s2t')
 opencc_t2s = opencc.OpenCC('t2s')
 
+def smart_linebreak(text, max_chars=40):
+    import unicodedata
+    lines = []
+    buffer = ""
+    count = 0
+
+    for c in text:
+        if unicodedata.east_asian_width(c) in ('F', 'W', 'A'):
+            count += 1
+        else:
+            count += 0.5
+
+        buffer += c
+        if count >= max_chars:
+            lines.append(buffer)
+            buffer = ""
+            count = 0
+
+    if buffer:
+        lines.append(buffer)
+
+    return "\n".join(lines)
+
+@app.route("/ping")
+def ping():
+    return "pong"
+
 @app.route("/translate-lite", methods=["GET", "POST"])
 def translate():
+    wrap = True  # 預設開啟自動換行
     if request.method == "GET":
         text = request.args.get("text", "")
         from_lang = request.args.get("from", "en")
         to_lang = request.args.get("to", "zh")
+        wrap = request.args.get("wrap", "true").lower() != "false"  # wrap=false 則關閉
     else:
         data = request.get_json(force=True)
         text = data.get("text", "")
         from_lang = data.get("from", "en")
         to_lang = data.get("to", "zh")
+        wrap = str(data.get("wrap", "true")).lower() != "false"
 
     # 預設 zh 為 zh-tw
     if from_lang == "zh":
@@ -64,7 +96,7 @@ def translate():
     
     text_s2t = text
     text = urllib.parse.unquote(text)
-    text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text) ## 空白不視作換行
+    ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A)', '<eol>', text) ## 空白不視作換行
     ###text = re.sub(r'(\r\n|\r|\n|%0A|%0D|%0D%0A|\s)', '<eol>', text) ## 連空白視作換行(i.e. Elin)
 
 
@@ -144,6 +176,8 @@ def translate():
             final_text = opencc_s2t.convert(final_text)
 
         final_text = final_text.replace("<eol>", "\n")
+        if wrap:
+            final_text = smart_linebreak(final_text, max_chars=35)
         print(f"\u2705 翻譯結果: {final_text}")
         return Response(final_text, content_type="text/plain; charset=utf-8")
 
