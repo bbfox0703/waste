@@ -44,7 +44,9 @@ model_en_jap.to(device)
 opencc_s2t = opencc.OpenCC('s2t')
 opencc_t2s = opencc.OpenCC('t2s')
 
-def smart_linebreak(text, max_chars=40):
+##http://127.0.0.1:5001/translate-lite?from=ja&to=zh&wrap=false
+
+def smart_linebreak(text, max_chars=35):
     import unicodedata
     lines = []
     buffer = ""
@@ -76,13 +78,13 @@ def translate():
     wrap = True  # 預設開啟自動換行
     if request.method == "GET":
         text = request.args.get("text", "")
-        from_lang = request.args.get("from", "en")
+        from_lang = request.args.get("from", "zh-cn")
         to_lang = request.args.get("to", "zh")
         wrap = request.args.get("wrap", "true").lower() != "false"  # wrap=false 則關閉
     else:
         data = request.get_json(force=True)
         text = data.get("text", "")
-        from_lang = data.get("from", "en")
+        from_lang = data.get("from", "zh-cn")
         to_lang = data.get("to", "zh")
         wrap = str(data.get("wrap", "true")).lower() != "false"
 
