@@ -133,7 +133,7 @@ def translate():
             
         # === zh-cn -> zh-tw ===
         elif from_lang == "zh-cn" and to_lang in ["zh-tw", "zh"]:
-            final_text = opencc_s2t.convert(text)
+            final_text = text
             
         # === zh / zh-tw -> ja (via en) ===
         elif from_lang in ["zh", "zh-tw"] and to_lang == "ja":
