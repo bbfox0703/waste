@@ -91,7 +91,7 @@ def patch_custom_terms(text: str) -> str:
 
 ##http://127.0.0.1:5001/translate-lite?from=ja&to=zh&wrap=false
 
-def smart_linebreak(text, max_chars=35, word_split_threshold=24):
+def smart_linebreak(text, max_chars=35, word_split_threshold=2400):
     import unicodedata
 
     def count_length(s):
@@ -230,7 +230,7 @@ def translate():
 
         final_text = final_text.replace("<eol>", "\n")
         if wrap:
-            final_text = smart_linebreak(final_text, max_chars=100)
+            final_text = smart_linebreak(final_text, max_chars=100, word_split_threshold=2400)
         print(f"\u2705 翻譯結果: {final_text}")
         return Response(final_text, content_type="text/plain; charset=utf-8")
 
