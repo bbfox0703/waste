@@ -238,7 +238,6 @@ def translate():
             inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
             out = model_en_jap.generate(**inputs)
             final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
-            final_text = remove_extra_spaces_for_japanese(final_text)
             
         # === zh-cn -> ja (via en) ===
         elif from_lang == "zh-cn" and to_lang == "ja":
@@ -270,6 +269,9 @@ def translate():
         if to_lang == "zh-tw":
             final_text = opencc_s2t.convert(final_text)
             final_text = patch_custom_terms(final_text) 
+
+        if to_lang == "ja":
+            final_text = remove_extra_spaces_for_japanese(final_text)
 
         final_text = final_text.replace("<eol>", "\n")
         if wrap:
