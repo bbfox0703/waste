@@ -24,6 +24,14 @@ OverrideFont=Microsoft JhengHei
 OverrideFontTextMeshPro=arialuni_sdf
 
 [Custom]
-Url=http://127.0.0.1:5001/translate-lite
+; force line break = 80
+; force change space char to line break, if string length > 30
+; warp=false
+;      false ==> ignore max_chars & word_split_threshold
+; max_chars=80
+; word_split_threshold=30
+; 
+
+Url=http://127.0.0.1:5001/translate-lite?wrap=false&max_chars=80&word_split_threshold=30
 EnableShortDelay=True
 DisableSpamChecks=True
