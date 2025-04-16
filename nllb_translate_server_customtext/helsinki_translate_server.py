@@ -122,6 +122,10 @@ def patch_custom_terms(text: str) -> str:
     for k, v in custom_zhcn_to_zh_tw.items():
         text = text.replace(k, v)
     return text
+    
+def remove_extra_spaces_for_japanese(text):
+    # 將日文中的「字 字 字」變成「字字字」
+    return re.sub(r'(?<=[\u3040-\u30FF\u4E00-\u9FFF])\s+(?=[\u3040-\u30FF\u4E00-\u9FFF])', '', text)
 
 ##http://127.0.0.1:5001/translate-lite?from=ja&to=zh&wrap=false
 
@@ -234,6 +238,7 @@ def translate():
             inputs = tokenizer_en_jap(mid_text, return_tensors="pt", padding=True, truncation=True).to(device)
             out = model_en_jap.generate(**inputs)
             final_text = tokenizer_en_jap.batch_decode(out, skip_special_tokens=True)[0]
+            final_text = remove_extra_spaces_for_japanese(final_text)
             
         # === zh-cn -> ja (via en) ===
         elif from_lang == "zh-cn" and to_lang == "ja":
