@@ -165,12 +165,16 @@ def translate():
         from_lang = request.args.get("from", "zh-cn")
         to_lang = request.args.get("to", "zh")
         wrap = request.args.get("wrap", "true").lower() != "false"  # wrap=false 則關閉
+        max_chars = int(request.args.get("max_chars", 1000))
+        word_split_threshold = int(request.args.get("word_split_threshold", 2400))
     else:
         data = request.get_json(force=True)
         text = data.get("text", "")
         from_lang = data.get("from", "zh-cn")
         to_lang = data.get("to", "zh")
         wrap = str(data.get("wrap", "true")).lower() != "false"
+        max_chars = int(data.get("max_chars", 1000))
+        word_split_threshold = int(data.get("word_split_threshold", 2400))
 
     # 預設 zh 為 zh-tw
     if from_lang == "zh":
@@ -264,7 +268,8 @@ def translate():
 
         final_text = final_text.replace("<eol>", "\n")
         if wrap:
-            final_text = smart_linebreak(final_text, max_chars=100, word_split_threshold=2400)
+            final_text = smart_linebreak(final_text, max_chars=max_chars, word_split_threshold=word_split_threshold)
+
         print(f"\u2705 翻譯結果: {final_text}")
         return Response(final_text, content_type="text/plain; charset=utf-8")
 
