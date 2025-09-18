@@ -1,6 +1,25 @@
-torch>=2.0.0
+# 指令： pip install -r requirements.txt 即可安裝套件
+
+# cu129 可用到 RTX 5090 CUDA
+# 自行更改對應版本
+--extra-index-url https://download.pytorch.org/whl/cu129
+
+# PyTorch
+torch
+torchvision
+torchaudio
+
+# Hugging Face 相關
 transformers>=4.48.0
-opencc-python-reimplemented
+accelerate>=0.30.0
+sentencepiece
+
+# 伺服器
 flask
 flask-cors
-sentencepiece
+
+# 中文繁簡轉換
+opencc-python-reimplemented
+
+# NLLB 3.3B 量化建議（可選）
+bitsandbytes>=0.44.0

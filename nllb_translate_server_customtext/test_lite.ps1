@@ -10,7 +10,7 @@ $tests = @(
 foreach ($item in $tests) {
   Write-Host "`n▶ 原文: $($item.text)"
   try {
-    $response = Invoke-RestMethod -Uri http://127.0.0.1:5001/translate-lite -Method Post `
+    $response = Invoke-RestMethod -Uri http://127.0.0.1:5001/translate -Method Post `
       -Body ($item | ConvertTo-Json -Compress) `
       -ContentType 'application/json'
 
